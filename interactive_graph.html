@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <title>Interactive Graph (15 Data Points)</title>
+</head>
+<body>
+    <h2>Interactive Graph (Up to 15 Data Points)</h2>
+    <div id="graph"></div>
+    <h4>Enter your data points (X and Y values between 0 and 1):</h4>
+    <input type="number" id="x-value" placeholder="X value (0 to 1)" step="0.1" min="0" max="1">
+    <input type="number" id="y-value" placeholder="Y value (0 to 1)" step="0.1" min="0" max="1">
+    <button onclick="addData()">Add Data Point</button>
+
+    <p id="warning-message" style="color:red;"></p>
+
+    <script>
+        var xData = [];
+        var yData = [];
+        var maxPoints = 15; // Allow up to 15 points
+
+        var trace = {
+            x: xData,
+            y: yData,
+            mode: 'lines+markers',
+            type: 'scatter'
+        };
+
+        var layout = {
+            xaxis: {range: [0, 1], dtick: 0.1, title: 'X Axis'},
+            yaxis: {range: [0, 1], dtick: 0.1, title: 'Y Axis'}
+        };
+
+        Plotly.newPlot('graph', [trace], layout);
+
+        function addData() {
+            var x = parseFloat(document.getElementById('x-value').value);
+            var y = parseFloat(document.getElementById('y-value').value);
+            var warningMessage = document.getElementById('warning-message');
+
+            if (x >= 0 && x <= 1 && y >= 0 && y <= 1) {
+                if (xData.length < maxPoints) {
+                    xData.push(x);
+                    yData.push(y);
+                    Plotly.react('graph', [trace], layout); // Update graph with new data
+                    warningMessage.textContent = ""; // Clear warning message
+                } else {
+                    warningMessage.textContent = "You have reached the maximum of 15 data points.";
+                }
+            } else {
+                alert('Please enter values between 0 and 1.');
+            }
+        }
+    </script>
+</body>
+</html>
